@@ -12,12 +12,12 @@ export class UserController {
   async create(@Body() body: CreateUserBody) {
     const { email, name, password } = body;
 
-    const userCreated = await this.createUser.execute({
+    const { user } = await this.createUser.execute({
       email,
       name,
       password,
     });
 
-    return UserMapper.toHTTP(userCreated);
+    return UserMapper.toHTTP(user);
   }
 }

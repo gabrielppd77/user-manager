@@ -4,7 +4,7 @@ import { hash } from 'bcrypt';
 import { UserRepository } from '@app/repositories/user.repository';
 
 import { User } from '../entities/user';
-import { EmailOrPasswordIncorrect } from './errors/email-or-password-incorrect';
+import { EmailInUseException } from './errors/email-in-use';
 
 interface Request {
   email: string;
@@ -12,7 +12,9 @@ interface Request {
   password: string;
 }
 
-type Response = User;
+export interface Response {
+  user: User;
+}
 
 @Injectable()
 export class CreateUser {
@@ -23,18 +25,20 @@ export class CreateUser {
 
     const userExist = await this.userRepository.findByEmail(email);
 
-    if (userExist) throw new EmailOrPasswordIncorrect();
+    if (userExist) throw new EmailInUseException();
 
     const hashPassword = await hash(password, 10);
 
-    const newUser = new User({
+    const user = new User({
       email,
       name,
       password: hashPassword,
     });
 
-    await this.userRepository.create(newUser);
+    await this.userRepository.create(user);
 
-    return newUser;
+    return {
+      user,
+    };
   }
 }

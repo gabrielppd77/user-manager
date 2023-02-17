@@ -2,7 +2,7 @@ import { User } from '@app/entities/user';
 import { InMemoryUserRepository } from '@test/repositories/in-memory-user.repository';
 
 import { CreateUser } from './create-user';
-import { EmailOrPasswordIncorrect } from './errors/email-or-password-incorrect';
+import { EmailInUseException } from './errors/email-in-use';
 
 describe('CreateUser', () => {
   it('should show error when found email that has been registred', async () => {
@@ -26,7 +26,7 @@ describe('CreateUser', () => {
           name: 'Jon Doe',
           password: '1234',
         }),
-    ).rejects.toThrow(EmailOrPasswordIncorrect);
+    ).rejects.toThrow(EmailInUseException);
   });
 
   it('should be able to create an user', async () => {
@@ -39,17 +39,17 @@ describe('CreateUser', () => {
       password: '1234',
     };
 
-    const userCreated = await createUser.execute(userToCreate);
+    const { user } = await createUser.execute(userToCreate);
 
     const userCreatedInDB = userRepository.users[0];
 
-    expect(userCreated).toBeTruthy();
+    expect(user).toBeTruthy();
     expect(userCreatedInDB).toBeTruthy();
 
-    expect(userCreated.id).toBeDefined();
-    expect(userCreated.password).toBeDefined();
-    expect(userCreated.password).not.toEqual(userToCreate.password);
-    expect(userCreated.name).toEqual(userToCreate.name);
-    expect(userCreated.email).toEqual(userToCreate.email);
+    expect(user.id).toBeDefined();
+    expect(user.password).toBeDefined();
+    expect(user.password).not.toEqual(userToCreate.password);
+    expect(user.name).toEqual(userToCreate.name);
+    expect(user.email).toEqual(userToCreate.email);
   });
 });
