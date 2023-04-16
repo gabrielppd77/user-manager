@@ -1,15 +1,15 @@
 import { InMemoryUserRepository } from '@test/repositories/in-memory-user.repository';
 
-import { ValidateUser } from './validate-user';
+import { ValidateLoginUser } from './validate-login-user';
 import { CreateUser } from './create-user';
 
-import { EmailOrPasswordIncorrectException } from './errors/email-or-password-incorrect';
+import { EmailOrPasswordIncorrectException } from './errors/email-or-password-incorrect.exception';
 
-describe('Authenticate user', () => {
+describe('validate user login', () => {
   it('should be able to authenticate an user', async () => {
     const userRepository = new InMemoryUserRepository();
     const createUser = new CreateUser(userRepository);
-    const validateUser = new ValidateUser(userRepository);
+    const validateLoginUser = new ValidateLoginUser(userRepository);
 
     const userToCreate = {
       email: 'email@emailvalid.com',
@@ -19,7 +19,7 @@ describe('Authenticate user', () => {
 
     await createUser.execute(userToCreate);
 
-    const { user } = await validateUser.execute({
+    const { user } = await validateLoginUser.execute({
       email: userToCreate.email,
       password: userToCreate.password,
     });
@@ -31,13 +31,13 @@ describe('Authenticate user', () => {
     expect(user.password).not.toEqual(userToCreate.password);
   });
 
-  it('should be able to show an error when pass the invalid email', async () => {
+  it('should be able to show an error when pass the incorrect email', async () => {
     const userRepository = new InMemoryUserRepository();
     const createUser = new CreateUser(userRepository);
-    const validateUser = new ValidateUser(userRepository);
+    const validateLoginUser = new ValidateLoginUser(userRepository);
 
     const userToCreate = {
-      email: 'email@emailvalid.com',
+      email: 'email@correct.com',
       password: '1234',
       name: 'Jon Doe',
     };
@@ -46,20 +46,20 @@ describe('Authenticate user', () => {
 
     expect(
       async () =>
-        await validateUser.execute({
-          email: 'email@emailinvalid.com',
+        await validateLoginUser.execute({
+          email: 'email@incorrect.com',
           password: userToCreate.password,
         }),
     ).rejects.toThrow(EmailOrPasswordIncorrectException);
   });
 
-  it('should be able to show an error when pass the invalid password', async () => {
+  it('should be able to show an error when pass the incorrect password', async () => {
     const userRepository = new InMemoryUserRepository();
     const createUser = new CreateUser(userRepository);
-    const validateUser = new ValidateUser(userRepository);
+    const validateLoginUser = new ValidateLoginUser(userRepository);
 
     const userToCreate = {
-      email: 'email@emailvalid.com',
+      email: 'email@correct.com',
       password: '12345678',
       name: 'Jon Doe',
     };
@@ -68,9 +68,9 @@ describe('Authenticate user', () => {
 
     expect(
       async () =>
-        await validateUser.execute({
+        await validateLoginUser.execute({
           email: userToCreate.email,
-          password: 'invalid-password',
+          password: 'incorrect-password',
         }),
     ).rejects.toThrow(EmailOrPasswordIncorrectException);
   });

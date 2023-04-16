@@ -10,7 +10,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
-import { ValidateUser } from '@app/use-cases/validate-user';
+import { ValidateLoginUser } from '@app/use-cases/validate-login-user';
 import { LoginUser } from '@app/use-cases/login-user';
 
 @Module({
@@ -23,7 +23,7 @@ import { LoginUser } from '@app/use-cases/login-user';
     }),
   ],
   providers: [
-    ValidateUser,
+    ValidateLoginUser,
     LoginUser,
     LocalStrategy,
     JwtStrategy,

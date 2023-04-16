@@ -4,7 +4,7 @@ import { compare } from 'bcrypt';
 import { UserRepository } from '@app/repositories/user.repository';
 import { User } from '@app/entities/user';
 
-import { EmailOrPasswordIncorrectException } from './errors/email-or-password-incorrect';
+import { EmailOrPasswordIncorrectException } from './errors/email-or-password-incorrect.exception';
 
 interface Request {
   email: string;
@@ -16,7 +16,7 @@ interface Response {
 }
 
 @Injectable()
-export class ValidateUser {
+export class ValidateLoginUser {
   constructor(private userRepository: UserRepository) {}
 
   async execute(req: Request): Promise<Response> {

@@ -1,8 +1,13 @@
-import { Body, Controller, Post, UseGuards, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  Request,
+  HttpCode,
+} from '@nestjs/common';
 
 import { User } from '@app/entities/user';
-
-import { UserMapper } from '../mappers/user-mapper';
 
 import { CreateUser } from '@app/use-cases/create-user';
 import { LoginUser } from '@app/use-cases/login-user';
@@ -22,17 +27,22 @@ export class UserController {
   async create(@Body() body: CreateUserBody) {
     const { email, name, password } = body;
 
-    const { user } = await this.createUser.execute({
+    await this.createUser.execute({
       email,
       name,
       password,
     });
 
-    return UserMapper.toHTTP(user);
+    return {
+      statusCode: 201,
+      message: 'Usuário criado com sucesso.',
+      data: null,
+    };
   }
 
   @Public()
   @UseGuards(LocalAuthGuard)
+  @HttpCode(200)
   @Post('login')
   async login(@Request() req) {
     const userAuthenticated = req.user as User;
@@ -42,7 +52,11 @@ export class UserController {
     });
 
     return {
-      access_token,
+      statusCode: 200,
+      message: 'Login realizado com sucesso.',
+      data: {
+        access_token,
+      },
     };
   }
 }

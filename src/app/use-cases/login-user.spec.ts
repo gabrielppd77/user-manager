@@ -7,7 +7,7 @@ import { InMemoryUserRepository } from '@test/repositories/in-memory-user.reposi
 const JWT_SECRET = 'JWT_SECRET_FOR_TEST';
 
 describe('LoginUser', () => {
-  it('should login an user and create access_token correctly', async () => {
+  it('should login an user and create tokens correctly', async () => {
     const jwtService = new JwtService({
       secret: JWT_SECRET,
     });
@@ -16,12 +16,14 @@ describe('LoginUser', () => {
     const inMemoryRepository = new InMemoryUserRepository();
     const createUser = new CreateUser(inMemoryRepository);
 
-    const userCreated = await createUser.execute({
+    await createUser.execute({
       email: 'email@valid.com',
       name: 'Jon Doe',
       password: '1234',
     });
-    const { access_token } = loginUser.execute(userCreated);
+    const userCreated = inMemoryRepository.users[0];
+
+    const { access_token } = loginUser.execute({ user: userCreated });
 
     expect(access_token).toBeTruthy();
   });

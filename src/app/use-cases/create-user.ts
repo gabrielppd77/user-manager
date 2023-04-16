@@ -4,7 +4,7 @@ import { hash } from 'bcrypt';
 import { UserRepository } from '@app/repositories/user.repository';
 
 import { User } from '../entities/user';
-import { EmailInUseException } from './errors/email-in-use';
+import { EmailInUseException } from './errors/email-in-use.exception';
 
 interface Request {
   email: string;
@@ -12,9 +12,7 @@ interface Request {
   password: string;
 }
 
-export interface Response {
-  user: User;
-}
+type Response = void;
 
 @Injectable()
 export class CreateUser {
@@ -36,9 +34,5 @@ export class CreateUser {
     });
 
     await this.userRepository.create(user);
-
-    return {
-      user,
-    };
   }
 }
