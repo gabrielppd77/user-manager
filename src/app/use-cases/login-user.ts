@@ -23,7 +23,7 @@ export class LoginUser {
   execute(req: Request): Response {
     const { user } = req;
 
-    const payload = { email: user.email, sub: user.id } as Payload;
+    const payload = { email: user.email, sub: user.id.toValue() } as Payload;
 
     const access_token = this.jwtService.sign(payload);
 
