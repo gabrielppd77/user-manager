@@ -6,7 +6,6 @@ export class PrismaUserMapper {
     return {
       id: user.id.toValue(),
       email: user.email,
-      name: user.name,
       password: user.password,
     };
   }
@@ -14,7 +13,6 @@ export class PrismaUserMapper {
     return new User(
       {
         email: userPrisma.email,
-        name: userPrisma.name,
         password: userPrisma.password,
       },
       userPrisma.id,

@@ -18,7 +18,6 @@ describe('LoginUser', () => {
 
     await createUser.execute({
       email: 'email@valid.com',
-      name: 'Jon Doe',
       password: '1234',
     });
     const userCreated = inMemoryRepository.users[0];

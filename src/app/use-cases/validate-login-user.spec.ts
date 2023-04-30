@@ -3,7 +3,7 @@ import { InMemoryUserRepository } from '@test/repositories/in-memory-user.reposi
 import { ValidateLoginUser } from './validate-login-user';
 import { CreateUser } from './create-user';
 
-import { EmailOrPasswordIncorrectException } from './errors/email-or-password-incorrect.exception';
+import { EmailOrPasswordIncorrectException } from './exceptions/email-or-password-incorrect.exception';
 
 describe('validate user login', () => {
   it('should be able to authenticate an user', async () => {
@@ -27,7 +27,6 @@ describe('validate user login', () => {
     expect(user).toBeDefined();
     expect(user.id).toBeDefined();
     expect(user.email).toEqual(userToCreate.email);
-    expect(user.name).toEqual(userToCreate.name);
     expect(user.password).not.toEqual(userToCreate.password);
   });
 
@@ -61,7 +60,6 @@ describe('validate user login', () => {
     const userToCreate = {
       email: 'email@correct.com',
       password: '12345678',
-      name: 'Jon Doe',
     };
 
     await createUser.execute(userToCreate);

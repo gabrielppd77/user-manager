@@ -14,6 +14,10 @@ async function bootstrap() {
     }),
   );
 
+  if (process.env.NODE_ENV === 'dev') {
+    app.enableCors();
+  }
+
   await app.listen(process.env.APP_PORT);
 }
 bootstrap();

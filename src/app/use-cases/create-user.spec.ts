@@ -2,7 +2,7 @@ import { User } from '@app/entities/user';
 import { InMemoryUserRepository } from '@test/repositories/in-memory-user.repository';
 
 import { CreateUser } from './create-user';
-import { EmailInUseException } from './errors/email-in-use.exception';
+import { EmailInUseException } from './exceptions/email-in-use.exception';
 
 describe('CreateUser', () => {
   it('should be able to create an user', async () => {
@@ -24,7 +24,6 @@ describe('CreateUser', () => {
     expect(userCreatedInDB.id).toBeDefined();
     expect(userCreatedInDB.password).toBeDefined();
     expect(userCreatedInDB.password).not.toEqual(userToCreate.password);
-    expect(userCreatedInDB.name).toEqual(userToCreate.name);
     expect(userCreatedInDB.email).toEqual(userToCreate.email);
   });
 
@@ -36,7 +35,6 @@ describe('CreateUser', () => {
 
     const newUser = new User({
       email: emailRepeated,
-      name: 'Jon Doe',
       password: '1234',
     });
 
@@ -46,7 +44,6 @@ describe('CreateUser', () => {
       async () =>
         await createUser.execute({
           email: emailRepeated,
-          name: 'Jon Doe',
           password: '1234',
         }),
     ).rejects.toThrow(EmailInUseException);

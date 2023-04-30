@@ -4,11 +4,10 @@ import { hash } from 'bcrypt';
 import { UserRepository } from '@app/repositories/user.repository';
 
 import { User } from '../entities/user';
-import { EmailInUseException } from './errors/email-in-use.exception';
+import { EmailInUseException } from './exceptions/email-in-use.exception';
 
 interface Request {
   email: string;
-  name: string;
   password: string;
 }
 
@@ -19,7 +18,7 @@ export class CreateUser {
   constructor(private userRepository: UserRepository) {}
 
   async execute(request: Request): Promise<Response> {
-    const { name, email, password } = request;
+    const { email, password } = request;
 
     const userExist = await this.userRepository.findByEmail(email);
 
@@ -29,7 +28,6 @@ export class CreateUser {
 
     const user = new User({
       email,
-      name,
       password: hashPassword,
     });
 
